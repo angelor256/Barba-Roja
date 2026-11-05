@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+html { background: #0D0D0D; -webkit-tap-highlight-color: transparent; }
+body {
+  @apply bg-ink text-white font-sans antialiased;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@layer components {
+  .font-heading { @apply font-display uppercase tracking-wide; }
+  /* Título con sombra roja desplazada, guiño al logo */
+  .title-stamp { @apply font-display uppercase tracking-wide; text-shadow: 3px 3px 0 #E51E25; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-3 font-bold uppercase tracking-wide transition active:translate-y-px disabled:opacity-40 disabled:pointer-events-none; }
+  .btn-primary { @apply btn bg-brand text-white shadow-stamp-sm hover:bg-brand-light; box-shadow: 3px 3px 0 0 #fff; }
+  .btn-ghost { @apply btn border border-ink-600 bg-ink-800 text-white hover:border-brand; }
+  .btn-sm { @apply px-3 py-2 text-xs; }
+  .card { @apply rounded-xl border border-ink-700 bg-ink-800 p-4; }
+  .input { @apply w-full rounded-lg border border-ink-600 bg-ink-900 px-3 py-2.5 text-white placeholder-neutral-500 outline-none focus:border-brand; }
+  .label { @apply mb-1 block text-xs font-semibold uppercase tracking-wider text-neutral-400; }
+  .chip { @apply rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase; }
+}
