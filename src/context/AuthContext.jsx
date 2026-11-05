@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { supabase } from '../lib/supabase';
 
 const Ctx = createContext(null);
+const APP_URL = window.location.origin + import.meta.env.BASE_URL;
 export const useAuth = () => useContext(Ctx);
 
 export function AuthProvider({ children }) {
@@ -34,8 +35,8 @@ export function AuthProvider({ children }) {
     isAdmin: profile?.role === 'admin',
     signIn: (email, password) => supabase.auth.signInWithPassword({ email, password }),
     signUp: (email, password, full_name) =>
-      supabase.auth.signUp({ email, password, options: { data: { full_name }, emailRedirectTo: window.location.origin } }),
-    signInGoogle: () => supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin } }),
+      supabase.auth.signUp({ email, password, options: { data: { full_name }, emailRedirectTo: APP_URL } }),
+    signInGoogle: () => supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: APP_URL } }),
     signOut: () => supabase.auth.signOut(),
     refreshProfile: () => loadProfile(session?.user),
   }), [ready, session, profile, loadProfile]);

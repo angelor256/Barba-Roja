@@ -1,6 +1,8 @@
 /* Barba Roja – Service Worker: caché offline + Web Push */
-const VERSION = 'br-v1';
-const SHELL = ['/', '/manifest.webmanifest', '/favicon.png', '/icons/icon-192.png', '/icons/logo.png'];
+const VERSION = 'br-v2';
+const BASE = self.registration.scope;               // p. ej. https://x.github.io/barba-roja/
+const abs = (p) => new URL(String(p || '').replace(/^\//, ''), BASE).href;
+const SHELL = [BASE, abs('manifest.webmanifest'), abs('favicon.png'), abs('icons/icon-192.png'), abs('icons/logo.png')];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -26,8 +28,8 @@ self.addEventListener('fetch', (e) => {
   if (req.mode === 'navigate') {
     e.respondWith(
       fetch(req)
-        .then((res) => { caches.open(VERSION).then((c) => c.put('/', res.clone())); return res; })
-        .catch(() => caches.match('/'))
+        .then((res) => { caches.open(VERSION).then((c) => c.put(BASE, res.clone())); return res; })
+        .catch(() => caches.match(BASE))
     );
     return;
   }
@@ -52,9 +54,9 @@ self.addEventListener('push', (e) => {
   e.waitUntil(
     self.registration.showNotification(data.title || 'Barba Roja', {
       body: data.body || '',
-      icon: '/icons/icon-192.png',
-      badge: '/favicon.png',
-      data: { url: data.url || '/' },
+      icon: abs('icons/icon-192.png'),
+      badge: abs('favicon.png'),
+      data: { url: abs(data.url) },
       tag: data.tag,
     })
   );
@@ -62,7 +64,7 @@ self.addEventListener('push', (e) => {
 
 self.addEventListener('notificationclick', (e) => {
   e.notification.close();
-  const target = (e.notification.data && e.notification.data.url) || '/';
+  const target = (e.notification.data && e.notification.data.url) || BASE;
   e.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontained: true }).then((list) => {
       for (const c of list) { if ('focus' in c) { c.navigate(target); return c.focus(); } }

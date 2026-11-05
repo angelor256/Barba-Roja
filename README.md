@@ -40,6 +40,14 @@ supabase secrets set VAPID_PUBLIC_KEY=... VAPID_PRIVATE_KEY=... VAPID_SUBJECT=ma
 Los recordatorios automáticos (1 hora antes) se programan con `pg_cron` (ver bloque al final de `schema.sql`).
 En iPhone, las notificaciones solo funcionan con la app instalada en la pantalla de inicio (iOS 16.4+); el banner de instalación explica los pasos.
 
+### Demo en GitHub Pages
+1. Haz merge a `main` (el workflow `.github/workflows/pages.yml` publica en cada push a `main`).
+2. En GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+3. La demo queda en `https://<usuario>.github.io/<repo>/`. Sin variables corre en **modo demo** (precios, ubicación y flujo visual).
+4. Para que reserve de verdad: **Settings → Secrets and variables → Actions → Variables** y crea `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_VAPID_PUBLIC_KEY`, `VITE_WHATSAPP_NUMBER`. En Supabase añade la URL de Pages en *Authentication → URL Configuration*.
+
+El sitio usa `VITE_BASE` (el workflow lo fija al nombre del repo); en un dominio propio o Vercel/Netlify no hace falta. Los repos privados necesitan plan de pago para Pages.
+
 ### Despliegue
 Cualquier hosting estático con fallback SPA (`vercel.json` y `public/_redirects` incluidos). Requiere HTTPS para PWA/push.
 

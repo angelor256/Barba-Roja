@@ -9,7 +9,7 @@ const TEMPLATES = [
 ];
 
 export default function PushPanel() {
-  const [f, setF] = useState({ title: '', body: '', url: '/?agendar=1' });
+  const [f, setF] = useState({ title: '', body: '', url: '?agendar=1' });
   const [count, setCount] = useState(null);
   const [state, setState] = useState({ busy: false, msg: '', err: false });
 
