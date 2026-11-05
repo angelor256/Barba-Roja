@@ -1,6 +1,19 @@
 <!doctype html>
 <html lang="es">
   <head>
+    <script>
+      /* Si abren ".../Barba-Roja" (sin barra final, p. ej. enlaces pegados en WhatsApp) las rutas relativas
+         apuntarían a la raíz del dominio y todo fallaría. Se corrige antes de cargar nada. */
+      (function () {
+        var p = location.pathname;
+        if (!/\/$/.test(p) && !/\.[a-z0-9]+$/i.test(p)) { location.replace(p + '/' + location.search + location.hash); return; }
+        window.__brFails = [];
+        window.addEventListener('error', function (e) {
+          var t = e.target;
+          if (t && t !== window && (t.src || t.href)) window.__brFails.push((t.tagName || '?') + ' ' + (t.src || t.href));
+        }, true);
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Barba Roja · Barbería en Rohrmoser</title>
@@ -37,6 +50,7 @@
       #splash .bar i { display: block; height: 100%; width: 45%; border-radius: 3px; background: linear-gradient(90deg, transparent, #E51E25, #fff 90%); animation: sp-bar 1.25s cubic-bezier(.65,0,.35,1) infinite; }
       #splash .err { display: none; margin-top: 26px; text-align: center; color: #d4d4d4; font-size: 14px; }
       #splash .err button { margin-top: 12px; padding: 10px 22px; border: 0; border-radius: 999px; background: #E51E25; color: #fff; font: 600 14px Inter, sans-serif; }
+      #splash .err pre { margin: 18px 12px 0; max-width: 88vw; white-space: pre-wrap; word-break: break-all; text-align: left; font: 11px/1.4 ui-monospace, monospace; color: #737373; }
       #splash.splash-error .err { display: block; }
       #splash.splash-error .bar { display: none; }
       @keyframes sp-in { from { opacity: 0; transform: scale(.7); } to { opacity: 1; transform: none; } }
@@ -58,23 +72,42 @@
       <h1>Barba Roja</h1>
       <p class="sub">Rohrmoser · San José</p>
       <div class="bar" aria-hidden="true"><i></i></div>
-      <div class="err">No se pudo cargar la página.<br /><button type="button" onclick="location.reload()">Reintentar</button></div>
+      <div class="err">No se pudo cargar la página.<br /><button type="button" id="splash-retry">Limpiar y reintentar</button>
+        <pre id="splash-diag"></pre></div>
     </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script>
-      /* Quita la pantalla de carga cuando la app montó (mín. 1.4 s). Vive aquí, fuera del bundle,
-         para que NUNCA se quede atascada: si la app no arranca en 9 s muestra "Reintentar". */
+      /* Quita la pantalla de carga cuando la app montó (mín. 1.4 s). Vive fuera del bundle para que NUNCA
+         se quede atascada. Si algo falla: intenta repararse solo una vez (borra service worker y cachés)
+         y, si sigue fallando, muestra qué archivo no cargó. */
       (function () {
-        var s = document.getElementById('splash'), t0 = Date.now();
+        var s = document.getElementById('splash'); if (!s) return;
+        var t0 = Date.now();
         function hide() { s.classList.add('splash-hide'); setTimeout(function () { s.remove(); }, 800); }
+        function clean() {
+          var jobs = [];
+          if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations)
+            jobs.push(navigator.serviceWorker.getRegistrations().then(function (rs) { return Promise.all(rs.map(function (r) { return r.unregister(); })); }));
+          if (window.caches) jobs.push(caches.keys().then(function (ks) { return Promise.all(ks.map(function (k) { return caches.delete(k); })); }));
+          return Promise.all(jobs).catch(function () {});
+        }
+        function fail() {
+          var healed = false; try { healed = sessionStorage.getItem('br_healed'); } catch (e) {}
+          if (!healed) { try { sessionStorage.setItem('br_healed', '1'); } catch (e) {} return clean().then(function () { location.reload(); }); }
+          document.getElementById('splash-diag').textContent = 'Página: ' + location.href + '\n' + (window.__brFails.length ? 'No cargó:\n' + window.__brFails.join('\n') : 'La app no arrancó.');
+          s.classList.add('splash-error');
+        }
+        document.getElementById('splash-retry').onclick = function () { try { sessionStorage.removeItem('br_healed'); } catch (e) {} clean().then(function () { location.reload(); }); };
         var iv = setInterval(function () {
           var el = Date.now() - t0, root = document.getElementById('root');
+          var scriptFailed = window.__brFails.some(function (f) { return /^SCRIPT/.test(f); });
           if (root && root.childElementCount > 0 && el > 1400) {
             clearInterval(iv);
+            try { sessionStorage.removeItem('br_healed'); } catch (e) {}
             var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
             Promise.race([fonts, new Promise(function (r) { setTimeout(r, 1200); })]).then(hide);
-          } else if (el > 9000) { clearInterval(iv); s.classList.add('splash-error'); }
+          } else if ((scriptFailed && el > 1500) || el > 9000) { clearInterval(iv); fail(); }
         }, 100);
       })();
     </script>
