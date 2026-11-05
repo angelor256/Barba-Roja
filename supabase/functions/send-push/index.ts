@@ -59,7 +59,7 @@ Deno.serve(async (req) => {
       const r = await sendTo(subs ?? [], {
         title: 'Recordatorio de tu cita 💈',
         body: `Hoy a las ${hora} en Barba Roja. ¡Te esperamos!`,
-        url: '/perfil', tag: `cita-${a.id}`,
+        url: '#/perfil', tag: `cita-${a.id}`,
       });
       total += r.sent;
       await admin.from('appointments').update({ reminder_sent: true }).eq('id', a.id);

@@ -26,3 +26,9 @@ export const FALLBACK_SERVICES = [
   { id: 's6', name: 'Depilación de Nariz', description: '', price_crc: 3000, duration_min: 10 },
   { id: 's7', name: 'Depilación de Orejas', description: '', price_crc: 2500, duration_min: 10 },
 ];
+
+export const HOURS = [
+  { d: 'Lunes a viernes', h: '9:00 a. m. – 7:00 p. m.' },
+  { d: 'Sábado', h: '9:00 a. m. – 5:00 p. m.' },
+  { d: 'Domingo', h: 'Cerrado' },
+];

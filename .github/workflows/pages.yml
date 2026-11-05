@@ -26,8 +26,6 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          # Sirve el sitio bajo https://<usuario>.github.io/<repo>/
-          VITE_BASE: /${{ github.event.repository.name }}/
           # Opcionales (Settings > Secrets and variables > Actions > Variables). Sin ellas la app corre en modo demo.
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}

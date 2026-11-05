@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from './supabase';
 import { FALLBACK_SERVICES } from './config';
+import { DEMO_BARBERS, DEMO_SCHEDULES } from './demo';
 
 /** Servicios, barberos activos, horarios y ausencias (lectura pública). */
 export function useCatalog() {
-  const [data, setData] = useState({ services: FALLBACK_SERVICES, barbers: [], schedules: [], timeOff: [], loading: !!supabase });
+  const [data, setData] = useState({ services: FALLBACK_SERVICES, barbers: supabase ? [] : DEMO_BARBERS, schedules: supabase ? [] : DEMO_SCHEDULES, timeOff: [], loading: !!supabase });
 
   const load = useCallback(async () => {
     if (!supabase) return;

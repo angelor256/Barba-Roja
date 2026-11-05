@@ -18,9 +18,9 @@ export default function Calendar({ value, onChange, isEnabled, maxDaysAhead = 60
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <button onClick={() => move(-1)} disabled={!canPrev} aria-label="Mes anterior" className="rounded-full p-2 hover:bg-ink-800 disabled:opacity-20"><ChevronLeft /></button>
-        <span className="font-heading text-xl capitalize">{monthLabel}</span>
-        <button onClick={() => move(1)} disabled={!canNext} aria-label="Mes siguiente" className="rounded-full p-2 hover:bg-ink-800 disabled:opacity-20"><ChevronRight /></button>
+        <button onClick={() => move(-1)} disabled={!canPrev} aria-label="Mes anterior" className="rounded-full p-2 transition hover:bg-white/10 disabled:opacity-20"><ChevronLeft /></button>
+        <span className="font-display text-3xl capitalize tracking-wide">{monthLabel}</span>
+        <button onClick={() => move(1)} disabled={!canNext} aria-label="Mes siguiente" className="rounded-full p-2 transition hover:bg-white/10 disabled:opacity-20"><ChevronRight /></button>
       </div>
       <div className="grid grid-cols-7 gap-1 text-center">
         {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((d, i) => <span key={i} className="py-1 text-xs font-bold text-neutral-500">{d}</span>)}
@@ -31,8 +31,8 @@ export default function Calendar({ value, onChange, isEnabled, maxDaysAhead = 60
           const sel = day === value;
           return (
             <button key={day} disabled={!ok} onClick={() => onChange(day)}
-              className={`aspect-square rounded-lg text-sm font-semibold transition
-                ${sel ? 'bg-brand text-white' : ok ? 'bg-ink-800 hover:border-brand border border-transparent hover:bg-ink-700' : 'text-neutral-700'}
+              className={`aspect-square rounded-full text-sm font-semibold transition duration-200
+                ${sel ? 'scale-105 bg-brand text-white shadow-glow' : ok ? 'bg-white/5 hover:bg-white/15' : 'text-neutral-700'}
                 ${day === today && !sel ? 'ring-1 ring-brand' : ''}`}>
               {i + 1}
             </button>

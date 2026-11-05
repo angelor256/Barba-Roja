@@ -1,5 +1,5 @@
 /* Barba Roja – Service Worker: caché offline + Web Push */
-const VERSION = 'br-v2';
+const VERSION = 'br-v3';
 const BASE = self.registration.scope;               // p. ej. https://x.github.io/barba-roja/
 const abs = (p) => new URL(String(p || '').replace(/^\//, ''), BASE).href;
 const SHELL = [BASE, abs('manifest.webmanifest'), abs('favicon.png'), abs('icons/icon-192.png'), abs('icons/logo.png')];

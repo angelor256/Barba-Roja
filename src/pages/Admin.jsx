@@ -29,11 +29,12 @@ export default function Admin() {
   const Active = TABS.find((t) => t.id === tab).C;
   return (
     <div className="mx-auto max-w-6xl px-4 py-6">
-      <h1 className="title-stamp mb-4 text-4xl">Panel</h1>
+      <p className="eyebrow">Administración</p>
+      <h1 className="mb-5 font-display text-6xl uppercase leading-none">Panel</h1>
       <div className="-mx-4 mb-6 flex gap-2 overflow-x-auto px-4 pb-1">
         {TABS.map(({ id, label, icon: I }) => (
           <button key={id} onClick={() => setTab(id)}
-            className={`btn btn-sm shrink-0 ${tab === id ? 'bg-brand text-white' : 'border border-ink-600 bg-ink-800 text-neutral-300'}`}>
+            className={`btn btn-sm shrink-0 ${tab === id ? 'bg-brand text-white shadow-glow' : 'border border-white/10 bg-white/5 text-neutral-300'}`}>
             <I size={16} /> {label}
           </button>
         ))}

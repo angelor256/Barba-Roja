@@ -27,10 +27,14 @@ create table if not exists public.services (
   created_at    timestamptz not null default now()
 );
 
+-- (si ya creaste la tabla antes: alter table public.barbers add column if not exists nickname text, add column if not exists bio text, add column if not exists years integer;)
 create table if not exists public.barbers (
   id          uuid primary key default gen_random_uuid(),
   name        text not null,
+  nickname    text,
   specialty   text,
+  bio         text,
+  years       integer,
   photo_url   text,
   active      boolean not null default true,
   sort_order  integer not null default 0,
