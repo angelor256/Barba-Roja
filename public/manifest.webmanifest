@@ -18,7 +18,7 @@
     { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "shortcuts": [
-    { "name": "Agendar cita", "url": "./?agendar=1", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
-    { "name": "Mis citas", "url": "./perfil", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+    { "name": "Agendar cita", "url": "./#/agendar", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Mis citas", "url": "./#/perfil", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
   ]
 }

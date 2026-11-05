@@ -3,7 +3,7 @@ import { Pencil, Plus, User } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import Modal from '../../components/Modal';
 
-const EMPTY = { name: '', specialty: '', photo_url: '', active: true };
+const EMPTY = { name: '', nickname: '', specialty: '', bio: '', years: '', photo_url: '', active: true };
 
 export default function Barbers() {
   const [list, setList] = useState([]);
@@ -58,7 +58,7 @@ function BarberForm({ barber, onClose, onSaved }) {
 
   const save = async (e) => {
     e.preventDefault(); setBusy(true);
-    const payload = { name: f.name, specialty: f.specialty || null, photo_url: f.photo_url || null, active: f.active };
+    const payload = { name: f.name, nickname: f.nickname || null, bio: f.bio || null, years: f.years ? Number(f.years) : null, specialty: f.specialty || null, photo_url: f.photo_url || null, active: f.active };
     const { error } = f.id ? await supabase.from('barbers').update(payload).eq('id', f.id) : await supabase.from('barbers').insert(payload);
     setBusy(false);
     if (error) setErr(error.message); else onSaved();
@@ -68,7 +68,12 @@ function BarberForm({ barber, onClose, onSaved }) {
     <Modal title={f.id ? 'Editar barbero' : 'Nuevo barbero'} onClose={onClose}>
       <form onSubmit={save} className="space-y-3">
         <div><label className="label">Nombre</label><input className="input" required value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></div>
+        <div className="grid grid-cols-2 gap-3">
+          <div><label className="label">Apodo</label><input className="input" value={f.nickname ?? ''} onChange={(e) => setF({ ...f, nickname: e.target.value })} placeholder="El Rojo" /></div>
+          <div><label className="label">Años de experiencia</label><input className="input" type="number" min="0" value={f.years ?? ''} onChange={(e) => setF({ ...f, years: e.target.value })} /></div>
+        </div>
         <div><label className="label">Especialidad</label><input className="input" value={f.specialty ?? ''} onChange={(e) => setF({ ...f, specialty: e.target.value })} placeholder="Degradados, barba clásica…" /></div>
+        <div><label className="label">Presentación (perfil público)</label><textarea className="input" rows={3} value={f.bio ?? ''} onChange={(e) => setF({ ...f, bio: e.target.value })} /></div>
         <div>
           <label className="label">Foto de perfil</label>
           {f.photo_url && <img src={f.photo_url} alt="" className="mb-2 h-20 w-20 rounded-full object-cover" />}

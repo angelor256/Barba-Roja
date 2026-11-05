@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-// VITE_BASE=/nombre-del-repo/ al publicar en GitHub Pages; '/' en cualquier otro hosting
-export default defineConfig({ base: process.env.VITE_BASE || '/', plugins: [react()] });
+// base relativa: la app funciona en cualquier ruta (GitHub Pages en /Repo/, dominio propio, Vercel…)
+export default defineConfig({ base: './', plugins: [react()] });

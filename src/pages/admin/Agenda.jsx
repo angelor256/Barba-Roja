@@ -63,9 +63,9 @@ export default function Agenda() {
     : fmtDate(crDate(day, '12:00'));
 
   const Card = ({ a }) => (
-    <div className="rounded-lg border border-ink-700 bg-ink-900 p-3">
+    <div className="rounded-lg border border-white/10 bg-white/5 p-3">
       <div className="flex items-center justify-between gap-2">
-        <span className="font-display text-lg">{fmtTime(a.start_at)}–{fmtTime(a.end_at)}</span>
+        <span className="price text-base">{fmtTime(a.start_at)}–{fmtTime(a.end_at)}</span>
         <select value={a.status} onChange={(e) => setStatus(a.id, e.target.value)}
           className={`chip border-0 outline-none ${STATUS[a.status].cls}`}>
           {Object.entries(STATUS).map(([k, v]) => <option key={k} value={k} className="bg-ink-900 text-white">{v.label}</option>)}
@@ -96,7 +96,7 @@ export default function Agenda() {
           <button onClick={() => step(1)} className="btn-ghost btn-sm" aria-label="Siguiente"><ChevronRight size={16} /></button>
         </div>
       </div>
-      <h2 className="font-heading text-2xl capitalize">{title}</h2>
+      <h2 className="font-display text-4xl capitalize tracking-wide">{title}</h2>
       {err && <p className="rounded-lg bg-red-500/10 p-3 text-sm text-red-300">{err}</p>}
 
       {view === 'day' && (

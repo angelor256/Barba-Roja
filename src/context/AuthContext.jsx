@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { supabase } from '../lib/supabase';
 
 const Ctx = createContext(null);
-const APP_URL = window.location.origin + import.meta.env.BASE_URL;
+const APP_URL = window.location.origin + window.location.pathname;
 export const useAuth = () => useContext(Ctx);
 
 export function AuthProvider({ children }) {

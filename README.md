@@ -8,10 +8,10 @@ React + Vite + Tailwind CSS + Supabase (Auth, Postgres, Storage, Edge Functions)
 ```
 public/            manifest.webmanifest, sw.js (offline + push), iconos (maskable incluidos)
 src/
-  lib/             config, fechas (UTC-6), disponibilidad, push, supabase
+  lib/             config, fechas (UTC-6), disponibilidad, push, supabase, demo (modo demostración)
   context/         AuthContext (email/contraseña + Google)
-  components/      Header, InstallBanner (iOS/Android), BookingModal (4 pasos), Calendar, Auth, Ubicación…
-  pages/           Home, Profile, Admin + admin/{Agenda,Barbers,Schedules,Services,PushPanel}
+  components/      Layout (header, barra inferior, footer), BookingFlow (4 pasos), InstallBanner, Calendar, cards…
+  pages/           Home, Services, Barbers, BarberDetail, About, Contact, Book, Profile, Admin + admin/*
 supabase/
   schema.sql                 tablas, RLS, RPCs (book_appointment…), semillas de servicios
   functions/send-push/       Edge Function: difusión (admin) + recordatorios (cron)
@@ -41,12 +41,13 @@ Los recordatorios automáticos (1 hora antes) se programan con `pg_cron` (ver bl
 En iPhone, las notificaciones solo funcionan con la app instalada en la pantalla de inicio (iOS 16.4+); el banner de instalación explica los pasos.
 
 ### Demo en GitHub Pages
-1. Haz merge a `main` (el workflow `.github/workflows/pages.yml` publica en cada push a `main`).
+1. El workflow `.github/workflows/pages.yml` publica en cada push a `main`.
 2. En GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. La demo queda en `https://<usuario>.github.io/<repo>/`. Sin variables corre en **modo demo** (precios, ubicación y flujo visual).
-4. Para que reserve de verdad: **Settings → Secrets and variables → Actions → Variables** y crea `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_VAPID_PUBLIC_KEY`, `VITE_WHATSAPP_NUMBER`. En Supabase añade la URL de Pages en *Authentication → URL Configuration*.
+3. La demo queda en `https://<usuario>.github.io/<repo>/`. Cada página tiene su URL (`#/servicios`, `#/barberos`, `#/agendar`…).
+4. **Sin variables corre en modo demostración**: 4 barberos ficticios, horarios con disponibilidad simulada y reservas de mentira guardadas solo en el navegador (se ven en *Mis citas*).
+5. Para que reserve de verdad: **Settings → Secrets and variables → Actions → Variables** → `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_VAPID_PUBLIC_KEY`, `VITE_WHATSAPP_NUMBER`. En Supabase añade la URL de Pages en *Authentication → URL Configuration*.
 
-El sitio usa `VITE_BASE` (el workflow lo fija al nombre del repo); en un dominio propio o Vercel/Netlify no hace falta. Los repos privados necesitan plan de pago para Pages.
+La app usa rutas relativas y `HashRouter`, así que funciona igual en cualquier subcarpeta, dominio propio, Vercel o Netlify. Los repos privados necesitan plan de pago para Pages.
 
 ### Despliegue
 Cualquier hosting estático con fallback SPA (`vercel.json` y `public/_redirects` incluidos). Requiere HTTPS para PWA/push.
