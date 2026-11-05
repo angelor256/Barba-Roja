@@ -98,7 +98,14 @@ export function Footer() {
           <ul className="mt-3 space-y-1 text-sm text-neutral-400">{HOURS.map((h) => <li key={h.d} className="flex justify-between gap-4"><span>{h.d}</span><span>{h.h}</span></li>)}</ul>
         </div>
       </div>
-      <p className="mt-10 text-center text-xs text-neutral-600">© {new Date().getFullYear()} Barba Roja · Rohrmoser, San José, Costa Rica</p>
+      <div className="mt-10 space-y-2 border-t border-white/5 pt-6 text-center text-xs text-neutral-600">
+        <p>© {new Date().getFullYear()} Barba Roja · Rohrmoser, San José, Costa Rica</p>
+        <p>
+          Creado por{' '}
+          <a href="https://angelor256.github.io/buildbeetech/#inicio" target="_blank" rel="noopener noreferrer"
+            className="font-semibold text-neutral-400 underline decoration-brand/50 underline-offset-4 transition hover:text-brand">Buildbee</a>
+        </p>
+      </div>
     </footer>
   );
 }
