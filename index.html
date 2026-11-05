@@ -11,7 +11,11 @@
         window.addEventListener('error', function (e) {
           var t = e.target;
           if (t && t !== window && (t.src || t.href)) window.__brFails.push((t.tagName || '?') + ' ' + (t.src || t.href));
+          else if (e.message) window.__brFails.push('ERROR JS: ' + e.message + ' (' + String(e.filename || '').split('/').pop() + ':' + e.lineno + ')');
         }, true);
+        window.addEventListener('unhandledrejection', function (e) {
+          window.__brFails.push('PROMESA: ' + (e.reason && (e.reason.message || e.reason)));
+        });
       })();
     </script>
     <meta charset="UTF-8" />
@@ -101,7 +105,7 @@
         document.getElementById('splash-retry').onclick = function () { try { sessionStorage.removeItem('br_healed'); } catch (e) {} clean().then(function () { location.reload(); }); };
         var iv = setInterval(function () {
           var el = Date.now() - t0, root = document.getElementById('root');
-          var scriptFailed = window.__brFails.some(function (f) { return /^SCRIPT/.test(f); });
+          var scriptFailed = window.__brFails.some(function (f) { return /^(SCRIPT|ERROR JS)/.test(f); });
           if (root && root.childElementCount > 0 && el > 1400) {
             clearInterval(iv);
             try { sessionStorage.removeItem('br_healed'); } catch (e) {}
